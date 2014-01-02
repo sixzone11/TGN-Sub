@@ -14,14 +14,14 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="PlatformBase.cpp" />
     <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="WindowPlatform.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Macro.h" />
     <ClInclude Include="PlatformBase.h" />
     <ClInclude Include="Renderer.h" />
-    <ClInclude Include="WindowPlatform.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9D02BB02-4991-46E8-A4F9-8BFC24E9DDCE}</ProjectGuid>

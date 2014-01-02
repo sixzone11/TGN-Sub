@@ -40,7 +40,6 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	CApplication application(&window);
 
 
-	
 }
 
 //
