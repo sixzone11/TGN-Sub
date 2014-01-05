@@ -5,19 +5,25 @@
 class Window
 {
 public:
-	Window( HINSTANCE hInst, WNDPROC proc, int nCmdShow, int appTitle, int defaultClassName );
+	Window( HINSTANCE hInst, WNDPROC proc, const TCHAR* appTitle, const TCHAR* defaultClassName );
 	~Window();
 
 
-private:
-	ATOM			RegisterClass( WNDPROC proc, TCHAR* title, TCHAR* className );
-	void			InitInstance( int nCmdShow, TCHAR* title, TCHAR* className );
-	LRESULT			Procedure( UINT msg, WPARAM wParam, LPARAM lParam );
+public:
+	void			InitInstance( int nCmdShow );
+
+
+public:
+	LRESULT			Procedure( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam );
 
 
 private:
 	void			EnableOpenGL();
 	void			DisableOpenGL();
+
+
+public:
+	void			Update(float dt);
 
 
 private:
@@ -26,6 +32,6 @@ private:
 	HDC				_hDC;
 	HGLRC			_hGLRC;
 
-	UINT			_windowTitleID;
-	UINT			_windowClassNameID;
+	const TCHAR*	_windowTitle;
+	const TCHAR*	_windowClassName;
 };

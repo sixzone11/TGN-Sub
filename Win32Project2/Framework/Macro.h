@@ -12,3 +12,6 @@
 #define GETP_SETP_ACCESSOR(n, x, y) SETP_ACCESSOR(n, x, y) GETP_ACCESSOR(n, x, y)
 
 #define DEFINE_GET_SET_ACCESSOR(n, x, y)   private: x y; public: SET_ACCESSOR(n, x, y) public: GET_ACCESSOR(n, x, y)
+
+
+#define SET_INTERFACE		= 0

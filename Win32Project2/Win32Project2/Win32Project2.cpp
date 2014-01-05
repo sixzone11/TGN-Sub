@@ -4,26 +4,14 @@
 #include "stdafx.h"
 #include "Win32Project2.h"
 
-#include "Window.h"
-#include "Application.h"
+#include "AppFramework.h"
 
 #include <gl/GL.h>
 
 #pragma comment (lib, "opengl32.lib")
 
-#define MAX_LOADSTRING 100
-
-// Global Variables:
-HINSTANCE hInst;					
-static HDC hdc;
-static HGLRC hrc;
-// current instance
-TCHAR szTitle[MAX_LOADSTRING];					// The title bar text
-TCHAR szWindowClass[MAX_LOADSTRING];			// the main window class name
-
 // Forward declarations of functions included in this code module:
-ATOM				MyRegisterClass(HINSTANCE hInstance);
-BOOL				InitInstance(HINSTANCE, int);
+ATOM				RegisterWindow( HINSTANCE hInst, TCHAR* className );
 LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
 
@@ -36,11 +24,50 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
 	// TODO: Place code here.
-	Window window(hInstance, WndProc, nCmdShow, IDS_APP_TITLE, IDC_WIN32PROJECT2);
-	CApplication application(&window);
+	try
+	{
+		TCHAR* className = _T("Test");
+		if(RegisterWindow( hInstance, className ) == 0)
+			throw false;
 
+		Window* window = new Window(hInstance, WndProc, _T("Test"), className );
+		CAppFramework framework(window);
 
+		int result;
+
+		result = CApplication::GetInstance()->Run();
+
+		return result;
+	}
+	catch( bool )
+	{
+		DWORD errorNo = GetLastError();
+
+		return 0;
+	}
 }
+
+ATOM RegisterWindow( HINSTANCE hInst, TCHAR* className )
+{
+	WNDCLASSEX wcex;
+
+	wcex.cbSize = sizeof( WNDCLASSEX );
+
+	wcex.style			= CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+	wcex.lpfnWndProc	= WndProc;
+	wcex.cbClsExtra		= 0;
+	wcex.cbWndExtra		= 0;
+	wcex.hInstance		= hInst;
+	wcex.hIcon			= LoadIcon( hInst, MAKEINTRESOURCE( IDI_WIN32PROJECT2 ) );
+	wcex.hCursor		= LoadCursor( NULL, IDC_ARROW );
+	wcex.hbrBackground	= (HBRUSH)( COLOR_WINDOW+1 );
+	wcex.lpszMenuName	= NULL;//MAKEINTRESOURCE( IDC_WIN32PROJECT2 );
+	wcex.lpszClassName	= className;
+	wcex.hIconSm		= LoadIcon(wcex.hInstance, MAKEINTRESOURCE( IDI_SMALL ) );
+
+	return RegisterClassEx(&wcex);
+}
+
 
 //
 //  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
@@ -53,7 +80,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return 0;
+	return CApplication::GetInstance()->GetWindow()->Procedure(hWnd, message, wParam, lParam);
 }
 
 // Message handler for about box.

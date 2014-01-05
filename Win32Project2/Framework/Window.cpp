@@ -1,27 +1,16 @@
 #include "Window.h"
 #include "Renderer.h"
 
+#include <gl/GL.h>
 
-Window::Window( HINSTANCE hInst, WNDPROC proc, int nCmdShow, int appTitle, int defaultClassName )
+Window::Window( HINSTANCE hInst, WNDPROC proc, const TCHAR* appTitle, const TCHAR* defaultClassName )
 {
 	// Store key integer value corresponding to IDs
-	_windowTitleID		= appTitle;
-	_windowClassNameID	= defaultClassName;
+	_windowTitle		= appTitle;
+	_windowClassName	= defaultClassName;
 
 	// Store instance handle in our global variable
 	_hInst				= hInst;
-
-	// Load default window title and window class name
-	const int	size = 128;
-	TCHAR		title[size];
-	TCHAR		className[size];
-
-	LoadString(_hInst, _windowTitleID, title, size);
-	LoadString(_hInst, _windowClassNameID, className, size);
-
-	// Register window class and initialize window instance
-	RegisterClass(proc, title, className);
-	InitInstance(nCmdShow, title, className);
 }
 
 
@@ -34,26 +23,6 @@ Window::~Window(void)
 //
 //  PURPOSE: Registers the window class.
 //
-ATOM Window::RegisterClass( WNDPROC proc, TCHAR* title, TCHAR* className )
-{
-	WNDCLASSEX wcex;
-
-	wcex.cbSize = sizeof( WNDCLASSEX );
-
-	wcex.style			= CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wcex.lpfnWndProc	= proc;
-	wcex.cbClsExtra		= 0;
-	wcex.cbWndExtra		= 0;
-	wcex.hInstance		= _hInst;
-	wcex.hIcon			= NULL; //LoadIcon( _hInst, MAKEINTRESOURCE( IDI_WIN32PROJECT2 ) );
-	wcex.hCursor		= LoadCursor( NULL, IDC_ARROW );
-	wcex.hbrBackground	= (HBRUSH)( COLOR_WINDOW+1 );
-	wcex.lpszMenuName	= NULL; //MAKEINTRESOURCE( _windowClassNameID );
-	wcex.lpszClassName	= className;
-	wcex.hIconSm		= NULL; //LoadIcon(wcex.hInstance, MAKEINTRESOURCE( IDI_SMALL ) );
-
-	return RegisterClassEx(&wcex);
-}
 
 //
 //   FUNCTION: InitInstance(HINSTANCE, int)
@@ -65,28 +34,29 @@ ATOM Window::RegisterClass( WNDPROC proc, TCHAR* title, TCHAR* className )
 //        In this function, we save the instance handle in a global variable and
 //        create and display the main program window.
 //
-void Window::InitInstance( int nCmdShow, TCHAR* title, TCHAR* className )
+void Window::InitInstance( int nCmdShow )
 {
-	_hWnd = CreateWindow( className, title, WS_OVERLAPPEDWINDOW,
+	CreateWindow( _windowClassName, _windowTitle, WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0,
 		NULL, NULL, _hInst, NULL );
 
 	if ( !_hWnd )
 	{
-		throw FALSE;
+		throw false;
 	}
 
 	ShowWindow( _hWnd, nCmdShow );
 	UpdateWindow( _hWnd );
 }
 
-LRESULT Window::Procedure( UINT msg, WPARAM wParam, LPARAM lParam )
+LRESULT Window::Procedure(  HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
 	int wmId, wmEvent;
 
 	switch( msg )
 	{
 	case WM_CREATE:
+		_hWnd = hWnd;
 		EnableOpenGL();
 		break;
 
@@ -111,7 +81,7 @@ LRESULT Window::Procedure( UINT msg, WPARAM wParam, LPARAM lParam )
 		break;
 
 	default:
-		return DefWindowProc( _hWnd, msg, wParam, lParam );
+		return DefWindowProc( hWnd, msg, wParam, lParam );
 	}
 	return 0;
 }
@@ -157,4 +127,20 @@ void Window::DisableOpenGL()
 	wglMakeCurrent( NULL, NULL );
 	wglDeleteContext( _hGLRC );
 	ReleaseDC( _hWnd, _hDC );
+}
+
+void Window::Update(float dt)
+{
+	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
+	glClear( GL_COLOR_BUFFER_BIT );
+
+	glPushMatrix();
+	glBegin( GL_TRIANGLES );
+	glColor3f( 1.0f, 0.0f, 0.0f ); glVertex2f( 0.0f, 1.0f );
+	glColor3f( 0.0f, 1.0f, 0.0f ); glVertex2f( 0.87f, -0.5f );
+	glColor3f( 0.0f, 0.0f, 1.0f ); glVertex2f( -0.87f, -0.5f );
+	glEnd();
+	glPopMatrix();
+
+	SwapBuffers( _hDC );
 }

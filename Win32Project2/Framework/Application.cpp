@@ -1,8 +1,7 @@
 #include "Application.h"
 
-#include "PlatformBase.h"
-
-CApplication::CApplication(PlatformBase* platform)
+CApplication::CApplication()
+	: _hAccelTable(NULL)
 {
 	_hInst = GetModuleHandle(NULL);
 }
@@ -10,13 +9,20 @@ CApplication::CApplication(PlatformBase* platform)
 
 CApplication::~CApplication(void)
 {
+	if(_window) delete _window;
+}
+
+
+void CApplication::SetWindow(Window* window)
+{
+	_window = window;
+	_window->InitInstance( true );
 }
 
 
 int CApplication::Run()
 {
 	MSG msg;
-	HACCEL hAccelTable;
 
 	LARGE_INTEGER nFreq;
 	LARGE_INTEGER nLast;
@@ -26,7 +32,11 @@ int CApplication::Run()
 	QueryPerformanceFrequency(&nFreq);
 	QueryPerformanceCounter(&nLast);
 
-	hAccelTable = LoadAccelerators(_hInst, MAKEINTRESOURCE(IDC_WIN32PROJECT2));
+
+	if(ApplicationDidFinishInitialize() == false)
+	{
+		return -1;
+	}
 
 	// Main message loop:
 	while(TRUE)
@@ -41,26 +51,12 @@ int CApplication::Run()
 				nLast.QuadPart = nNow.QuadPart;
 
 				// MainLoop
+				_window->Update(0);
 			}
 			else
 			{
 				Sleep(0);
 			}
-			continue;
-
-			glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
-			glClear( GL_COLOR_BUFFER_BIT );
-			
-			glPushMatrix();
-			glBegin( GL_TRIANGLES );
-			glColor3f( 1.0f, 0.0f, 0.0f ); glVertex2f( 0.0f, 1.0f );
-			glColor3f( 0.0f, 1.0f, 0.0f ); glVertex2f( 0.87f, -0.5f );
-			glColor3f( 0.0f, 0.0f, 1.0f ); glVertex2f( -0.87f, -0.5f );
-			glEnd();
-			glPopMatrix();
-			
-			SwapBuffers( hdc );
-
 			continue;
 		}
 
@@ -69,7 +65,7 @@ int CApplication::Run()
 			break;
 		}
 		
-		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+		if (!TranslateAccelerator(msg.hwnd, _hAccelTable, &msg))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
