@@ -4,6 +4,10 @@ CApplication::CApplication()
 	: _hAccelTable(NULL)
 {
 	_hInst = GetModuleHandle(NULL);
+
+
+	// by default
+	SetAnimationInterval(1.0 / 60);
 }
 
 
@@ -13,10 +17,17 @@ CApplication::~CApplication(void)
 }
 
 
-void CApplication::SetWindow(Window* window)
+void CApplication::InitialMainWindow(Window* window)
 {
 	_window = window;
 	_window->InitInstance( true );
+}
+
+void CApplication::SetAnimationInterval(double interval)
+{
+	LARGE_INTEGER nFreq;
+	QueryPerformanceFrequency(&nFreq);
+	_animationInterval.QuadPart = (LONGLONG)(interval * nFreq.QuadPart);
 }
 
 

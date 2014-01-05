@@ -6,6 +6,12 @@
 
 class PlatformBase;
 
+#define FRAMEWORK_SETTING \
+	static CApplication* app = NULL; CApplication* CApplication::GetInstance() { if(app) { return app; } return NULL; }
+#define FRAMEWORK_BINDING \
+	if(app == NULL) { app = this; } else { throw false; }
+
+
 class CApplication
 {
 protected:
@@ -28,13 +34,19 @@ public:
 
 
 protected:
-	void		SetWindow(Window* window);
+	void		InitialMainWindow(Window* window);
 
+
+protected:
 	GET_ACCESSOR(InstanceHandle, HINSTANCE, _hInst);
 
 
 public:
 	GET_ACCESSOR(Window, Window*, _window);
+
+
+public:
+	void		SetAnimationInterval(double t);
 
 
 private:

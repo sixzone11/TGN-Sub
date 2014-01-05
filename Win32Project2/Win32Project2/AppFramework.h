@@ -11,4 +11,6 @@ public:
 
 private:
 	virtual bool		ApplicationDidFinishInitialize();
+	virtual void		ApplicationWillMinimize();
+	virtual void		ApplicationWillTerminate();
 };

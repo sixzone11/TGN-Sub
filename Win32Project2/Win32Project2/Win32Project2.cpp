@@ -9,6 +9,7 @@
 #include <gl/GL.h>
 
 #pragma comment (lib, "opengl32.lib")
+#pragma comment (lib, "glu32.lib")
 
 // Forward declarations of functions included in this code module:
 ATOM				RegisterWindow( HINSTANCE hInst, TCHAR* className );

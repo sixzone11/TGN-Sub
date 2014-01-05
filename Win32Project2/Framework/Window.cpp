@@ -2,6 +2,9 @@
 #include "Renderer.h"
 
 #include <gl/GL.h>
+#include <gl/GLU.h>
+
+float camera_z = 0;
 
 Window::Window( HINSTANCE hInst, WNDPROC proc, const TCHAR* appTitle, const TCHAR* defaultClassName )
 {
@@ -37,7 +40,7 @@ Window::~Window(void)
 void Window::InitInstance( int nCmdShow )
 {
 	CreateWindow( _windowClassName, _windowTitle, WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0,
+		0, 0, 800, 600,
 		NULL, NULL, _hInst, NULL );
 
 	if ( !_hWnd )
@@ -80,6 +83,13 @@ LRESULT Window::Procedure(  HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 		PostQuitMessage( 0 );
 		break;
 
+	case WM_KEYDOWN:
+		camera_z += .5;
+		break;
+
+	case WM_KEYUP:
+		break;
+
 	default:
 		return DefWindowProc( hWnd, msg, wParam, lParam );
 	}
@@ -120,6 +130,28 @@ void Window::EnableOpenGL()
 	// create and enable the render context (RC)
 	_hGLRC = wglCreateContext( _hDC );
 	wglMakeCurrent( _hDC, _hGLRC );
+
+	GLfloat ambient[] = {0.0, 0.0, 0.0, 1.0};
+	GLfloat diffuse[] = {.8, .8, .4, 1.0};
+	GLfloat specular[] = {.8, 0.3, 0.5, 1.0};
+	GLfloat position[] = {0.0, 0.0, 5.0, 0.0};
+	GLfloat lmodel_ambient[] = {0.2, 0.2, 0.2, 1.0};
+	GLfloat local_view[] = {0.0};
+
+
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+	glLightfv(GL_LIGHT0, GL_POSITION, position);
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
+	glLightModelfv(GL_LIGHT_MODEL_LOCAL_VIEWER, local_view);
+
+	glFrontFace(GL_CCW);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+
+	glEnable(GL_NORMALIZE);
+	glEnable(GL_DEPTH_TEST);
 }
 
 void Window::DisableOpenGL()
@@ -131,9 +163,31 @@ void Window::DisableOpenGL()
 
 void Window::Update(float dt)
 {
+	static double angle = 1;
 	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
-	glClear( GL_COLOR_BUFFER_BIT );
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glMatrixMode( GL_PROJECTION );
+
+	glLoadIdentity();
+	gluPerspective(28.0, 800.0/600.0, 5.0, 19.0);
+
+	glMatrixMode(GL_MODELVIEW);
+	//setCamera();
+	glLoadIdentity();
+	gluLookAt(
+		0, 0, camera_z,
+		0, 0, 0,
+		0, 1, 0);
+
+	//drawAxis();
+
+	glMatrixMode(GL_MODELVIEW);
+	glTranslatef(0.0, 0.0, 0);
+	glRotatef(angle, 0, 0, 1);
+	angle += 1;
+
+	//drawAnObject();
 	glPushMatrix();
 	glBegin( GL_TRIANGLES );
 	glColor3f( 1.0f, 0.0f, 0.0f ); glVertex2f( 0.0f, 1.0f );
@@ -141,6 +195,12 @@ void Window::Update(float dt)
 	glColor3f( 0.0f, 0.0f, 1.0f ); glVertex2f( -0.87f, -0.5f );
 	glEnd();
 	glPopMatrix();
+
+	glFlush();
+
+	
+
+	
 
 	SwapBuffers( _hDC );
 }

@@ -30,6 +30,9 @@
     <ClCompile Include="Window.cpp">
       <Filter>Framework\Platform</Filter>
     </ClCompile>
+    <ClCompile Include="FrameworkManager.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -45,6 +48,9 @@
       <Filter>Framework\Platform</Filter>
     </ClInclude>
     <ClInclude Include="Macro.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameworkManager.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,32 +1,15 @@
 #include "StdAfx.h"
 #include "AppFramework.h"
 
-static CApplication*		g_instance = NULL;
-
-CApplication* CApplication::GetInstance()
-{
-	if(g_instance)
-	{
-		return g_instance;
-	}
-	return NULL;
-}
-
+FRAMEWORK_SETTING
 
 CAppFramework::CAppFramework(Window* window)
 {
-	if(g_instance == NULL)
-	{
-		g_instance = this;
+	FRAMEWORK_BINDING
 
-		SetWindow(window);
+	InitialMainWindow(window);
 
-		_hAccelTable = LoadAccelerators(GetInstanceHandle(), MAKEINTRESOURCE(IDC_WIN32PROJECT2));
-	}
-	else
-	{
-		throw false;
-	}
+	_hAccelTable = LoadAccelerators(GetInstanceHandle(), MAKEINTRESOURCE(IDC_WIN32PROJECT2));
 }
 
 
@@ -38,4 +21,12 @@ CAppFramework::~CAppFramework(void)
 bool CAppFramework::ApplicationDidFinishInitialize()
 {
 	return true;
+}
+
+void CAppFramework::ApplicationWillMinimize()
+{
+}
+
+void CAppFramework::ApplicationWillTerminate()
+{
 }
