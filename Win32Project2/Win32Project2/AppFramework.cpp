@@ -1,7 +1,11 @@
 #include "StdAfx.h"
 #include "AppFramework.h"
 
-FRAMEWORK_SETTING
+#include "FrameworkManager.h"
+
+#include "TestScene.h"
+
+FRAMEWORK_SETTING /*("Win32Project2")*/
 
 CAppFramework::CAppFramework(Window* window)
 {
@@ -9,7 +13,8 @@ CAppFramework::CAppFramework(Window* window)
 
 	InitialMainWindow(window);
 
-	_hAccelTable = LoadAccelerators(GetInstanceHandle(), MAKEINTRESOURCE(IDC_WIN32PROJECT2));
+	_hAccelTable = LoadAccelerators(GetWindow()->GetInstance(),
+		MAKEINTRESOURCE(IDC_WIN32PROJECT2));
 }
 
 
@@ -20,6 +25,8 @@ CAppFramework::~CAppFramework(void)
 
 bool CAppFramework::ApplicationDidFinishInitialize()
 {
+	CSceneManager::GetInstance()->AddScene(new TestScene, "Test");
+
 	return true;
 }
 

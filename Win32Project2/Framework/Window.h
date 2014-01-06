@@ -2,6 +2,8 @@
 
 #include <Windows.h>
 
+#include "Macro.h"
+
 class Window
 {
 public:
@@ -10,7 +12,7 @@ public:
 
 
 public:
-	void			InitInstance( int nCmdShow );
+	void			InitInstance( int nCmdShow, int width, int height );
 
 
 public:
@@ -23,7 +25,14 @@ private:
 
 
 public:
-	void			Update(float dt);
+	void			SwapBuffer();
+
+
+public:
+	GET_ACCESSOR(Instance, HINSTANCE, _hInst)
+	GET_ACCESSOR(HWND, HWND, _hWnd)
+	GET_ACCESSOR(Width, int, _width)
+	GET_ACCESSOR(Height, int, _height)
 
 
 private:
@@ -34,4 +43,7 @@ private:
 
 	const TCHAR*	_windowTitle;
 	const TCHAR*	_windowClassName;
+
+	int				_width;
+	int				_height;
 };

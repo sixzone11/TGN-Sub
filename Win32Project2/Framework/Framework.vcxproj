@@ -13,16 +13,21 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="FrameworkManager.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="PlatformBase.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="FrameworkManager.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="Macro.h" />
     <ClInclude Include="PlatformBase.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -18,7 +18,7 @@ public:
 
 
 public:
-	void SetWindow(Window* window);
+	SET_ACCESSOR( Window, Window*, _window )
 	
 
 public:
@@ -27,6 +27,6 @@ public:
 
 
 private:
-	Window* _window;
+	Window*		_window;
 };
 

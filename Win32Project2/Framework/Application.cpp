@@ -1,7 +1,9 @@
 #include "Application.h"
 
+#include "FrameworkManager.h"
+
 CApplication::CApplication()
-	: _hAccelTable(NULL)
+	: _hAccelTable(NULL), _input(NULL)
 {
 	_hInst = GetModuleHandle(NULL);
 
@@ -13,14 +15,32 @@ CApplication::CApplication()
 
 CApplication::~CApplication(void)
 {
-	if(_window) delete _window;
+	if(_window)
+	{
+		delete _window;
+	}
+	
+	if(_input)
+	{
+		_input->Shutdown();
+		delete _input;
+	}
 }
 
 
 void CApplication::InitialMainWindow(Window* window)
 {
+	int width = 800, height = 600;
+
+	SetMainWindowSize(width, height);
+
 	_window = window;
-	_window->InitInstance( true );
+	_window->InitInstance( true, width, height );
+
+	Renderer::GetInstance()->SetWindow(_window);
+
+	_input = new CInput;
+	_input->Initialize(_window);
 }
 
 void CApplication::SetAnimationInterval(double interval)
@@ -54,6 +74,8 @@ int CApplication::Run()
 	{
 		if(! PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
+			_input->Frame();
+
 			QueryPerformanceCounter(&nNow);
 
 			// If it's the time to draw next frame, draw it, else sleep a while.
@@ -62,7 +84,7 @@ int CApplication::Run()
 				nLast.QuadPart = nNow.QuadPart;
 
 				// MainLoop
-				_window->Update(0);
+				FrameworkManager::GetInstance()->Update(0);
 			}
 			else
 			{

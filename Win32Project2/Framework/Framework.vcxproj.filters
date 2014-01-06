@@ -7,11 +7,12 @@
     </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+      <Extensions>
+      </Extensions>
     </Filter>
     <Filter Include="Framework">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx;h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
     <Filter Include="Framework\Platform">
       <UniqueIdentifier>{34115c82-702c-4213-8507-1d21438e6c1e}</UniqueIdentifier>
@@ -33,6 +34,12 @@
     <ClCompile Include="FrameworkManager.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Framework\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -52,6 +59,15 @@
     </ClInclude>
     <ClInclude Include="FrameworkManager.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Framework\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Framework</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -3,11 +3,12 @@
   <ItemGroup>
     <Filter Include="Windows">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+      <Extensions>
+      </Extensions>
     </Filter>
     <Filter Include="Class">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
     <Filter Include="Resource">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
@@ -15,6 +16,9 @@
     </Filter>
     <Filter Include="Class\Execution">
       <UniqueIdentifier>{b41a6564-deee-494d-a8a5-584faa23b6f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Class\Game">
+      <UniqueIdentifier>{28aec623-8ccf-40b5-b0fa-9db842516892}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -36,6 +40,9 @@
     <ClInclude Include="targetver.h">
       <Filter>Windows</Filter>
     </ClInclude>
+    <ClInclude Include="TestScene.h">
+      <Filter>Class\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -46,6 +53,9 @@
     </ClCompile>
     <ClCompile Include="AppFramework.cpp">
       <Filter>Class\Execution</Filter>
+    </ClCompile>
+    <ClCompile Include="TestScene.cpp">
+      <Filter>Class\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
