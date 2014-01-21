@@ -71,4 +71,12 @@
       <Filter>Resource</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="test.vsh">
+      <Filter>Resource</Filter>
+    </None>
+    <None Include="test.fsh">
+      <Filter>Resource</Filter>
+    </None>
+  </ItemGroup>
 </Project>

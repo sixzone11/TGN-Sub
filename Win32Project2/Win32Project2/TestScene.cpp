@@ -1,8 +1,7 @@
 #include "StdAfx.h"
 #include "TestScene.h"
 
-#include <gl/GL.h>
-#include <gl/GLU.h>
+#include <GL/glew.h>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -28,7 +27,6 @@ void TestScene::Initialize(void* context)
 	GLfloat lmodel_ambient[] = {0.2f, 0.2f, 0.2f, 1.0f};
 	GLfloat local_view[] = {0.0f};
 
-
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
@@ -42,6 +40,7 @@ void TestScene::Initialize(void* context)
 
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_DEPTH_TEST);
+
 
 	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
 

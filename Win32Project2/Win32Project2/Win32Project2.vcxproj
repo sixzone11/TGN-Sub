@@ -41,8 +41,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>../Framework;$(IncludePath)</IncludePath>
-    <LibraryPath>../Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Libraries\glew-1.10.0\include\;$(SolutionDir)Framework;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Libraries\glew-1.10.0\lib\Release\x64;$(OutputPath);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -114,6 +114,10 @@
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test.fsh" />
+    <None Include="test.vsh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
