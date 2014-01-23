@@ -2,8 +2,7 @@
 
 #include "Window.h"
 
-#include <gl/GL.h>
-#include <gl/GLU.h>
+#include <gl/glew.h>
 
 Renderer::Renderer(void) {}
 Renderer::~Renderer(void) {}

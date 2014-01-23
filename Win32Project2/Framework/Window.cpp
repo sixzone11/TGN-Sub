@@ -1,7 +1,7 @@
 #include "Window.h"
 
-#include <gl/GL.h>
-#include <gl/GLU.h>
+#include <gl/glew.h>
+#include <GL/wglew.h>
 
 Window::Window( HINSTANCE hInst, WNDPROC proc, const TCHAR* appTitle, const TCHAR* defaultClassName )
 	: _width(800), _height(600)
@@ -63,7 +63,7 @@ LRESULT Window::Procedure(  HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 	{
 	case WM_CREATE:
 		_hWnd = hWnd;
-		EnableOpenGL();
+		EnableOpenGL( 4.4 );
 		break;
 
 	//case WM_COMMAND:
@@ -92,40 +92,74 @@ LRESULT Window::Procedure(  HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 	return 0;
 }
 
-void Window::EnableOpenGL()
+void Window::EnableOpenGL( int version )
 {
-	//PIXELFORMATDESCRIPTOR pfd;
-	PIXELFORMATDESCRIPTOR pfd =
-	{
-		sizeof( PIXELFORMATDESCRIPTOR ),
-		1,
-		PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,    //Flags
-		PFD_TYPE_RGBA,            //The kind of framebuffer. RGBA or palette.
-		32,                        //Colordepth of the framebuffer.
-		0, 0, 0, 0, 0, 0,
-		0,
-		0,
-		0,
-		0, 0, 0, 0,
-		24,                        //Number of bits for the depthbuffer
-		8,                        //Number of bits for the stencilbuffer
-		0,                        //Number of Aux buffers in the framebuffer.
-		PFD_MAIN_PLANE,
-		0,
-		0, 0, 0
-	};
-
-	int format;
-	
 	// get the device context (DC)
 	_hDC = GetDC( _hWnd );
-	
-	format = ChoosePixelFormat( _hDC, &pfd );
-	SetPixelFormat( _hDC, format, &pfd );
-	
-	// create and enable the render context (RC)
-	_hGLRC = wglCreateContext( _hDC );
-	wglMakeCurrent( _hDC, _hGLRC );
+
+	if( version <= 2 )
+	{
+		PIXELFORMATDESCRIPTOR pfd =
+		{
+			sizeof( PIXELFORMATDESCRIPTOR ),
+			1,
+			PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,    //Flags
+			PFD_TYPE_RGBA,            //The kind of framebuffer. RGBA or palette.
+			32,                        //Colordepth of the framebuffer.
+			0, 0, 0, 0, 0, 0,
+			0,
+			0,
+			0,
+			0, 0, 0, 0,
+			24,                        //Number of bits for the depthbuffer
+			8,                        //Number of bits for the stencilbuffer
+			0,                        //Number of Aux buffers in the framebuffer.
+			PFD_MAIN_PLANE,
+			0,
+			0, 0, 0
+		};
+
+		int format;
+
+		format = ChoosePixelFormat( _hDC, &pfd );
+		SetPixelFormat( _hDC, format, &pfd );
+
+		// create and enable the render context (RC)
+		_hGLRC = wglCreateContext( _hDC );
+	}
+	else if( WGLEW_ARB_create_context && WGLEW_ARB_pixel_format )
+	{
+		const int pfList[] = {
+			WGL_DRAW_TO_WINDOW_ARB,	GL_TRUE, 
+			WGL_SUPPORT_OPENGL_ARB,	GL_TRUE, 
+			WGL_DOUBLE_BUFFER_ARB,	GL_TRUE, 
+			WGL_PIXEL_TYPE_ARB,		WGL_TYPE_RGBA_ARB, 
+			WGL_COLOR_BITS_ARB,		32, 
+			WGL_DEPTH_BITS_ARB,		24, 
+			WGL_STENCIL_BITS_ARB,	8, 
+			0 // End of attributes list
+		};
+		int contextList[] = 
+		{ 
+			WGL_CONTEXT_MAJOR_VERSION_ARB,	version, 
+			WGL_CONTEXT_MINOR_VERSION_ARB,	version, 
+			WGL_CONTEXT_FLAGS_ARB,			WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB, 
+			0 // End of attributes list
+		};
+
+		int iPixelFormat, iNumFormats; 
+		wglChoosePixelFormatARB(_hDC, pfList, NULL, 1, &iPixelFormat, ( UINT* )&iNumFormats ); 
+
+		// PFD seems to be only redundant parameter now
+		PIXELFORMATDESCRIPTOR pfd;
+		if(!SetPixelFormat( _hDC, iPixelFormat, &pfd ) )
+			throw false;
+
+		_hGLRC = wglCreateContextAttribsARB( _hDC, 0, contextList ); 
+	}
+
+	// If everything went OK
+	if( _hGLRC ) wglMakeCurrent(_hDC, _hGLRC); 
 }
 
 void Window::DisableOpenGL()

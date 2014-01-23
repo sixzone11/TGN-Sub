@@ -40,6 +40,9 @@
     <ClCompile Include="SceneManager.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -67,6 +70,9 @@
       <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="SceneManager.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
       <Filter>Framework</Filter>
     </ClInclude>
   </ItemGroup>

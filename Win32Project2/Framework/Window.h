@@ -20,7 +20,7 @@ public:
 
 
 private:
-	void			EnableOpenGL();
+	void			EnableOpenGL( int version );
 	void			DisableOpenGL();
 
 

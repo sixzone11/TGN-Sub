@@ -46,6 +46,12 @@ void TestScene::Initialize(void* context)
 
 	_cameraZ = 0;
 	_cameraAngle = 0;
+
+/*
+	this->_quad[0].x; this->_quad[0].y; this->_quad[0].z;
+	this->_quad[1].x; this->_quad[1].y; this->_quad[1].z;
+	this->_quad[2].x; this->_quad[2].y; this->_quad[2].z;
+	this->_quad[3].x; this->_quad[3].y; this->_quad[3].z;*/
 }
 
 void TestScene::Update(void* context, float dt)
@@ -55,6 +61,11 @@ void TestScene::Update(void* context, float dt)
 void TestScene::Render(void* context, float dt)
 {
 	static float angle = 1;
+
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject[0]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 
 	glMatrixMode( GL_PROJECTION );
 
@@ -78,14 +89,10 @@ void TestScene::Render(void* context, float dt)
 	glRotatef(angle, 0, 0, 1);
 	angle += 1;
 
-	//drawAnObject();
-	glPushMatrix();
-	glBegin( GL_TRIANGLES );
-	glColor3f( 1.0f, 0.0f, 0.0f ); glVertex2f( 0.0f, 1.0f );
-	glColor3f( 0.0f, 1.0f, 0.0f ); glVertex2f( 0.87f, -0.5f );
-	glColor3f( 0.0f, 0.0f, 1.0f ); glVertex2f( -0.87f, -0.5f );
-	glEnd();
-	glPopMatrix();
+	glGenBuffers(2, _vertexBufferObject);
+
+	glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject[0]);
+	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), _triangle, GL_STATIC_DRAW);
 
 	glFlush();
 }
