@@ -1,9 +1,41 @@
 #pragma once
 
+#define PLATFORM_IDENTIFIER_DEFAULT		0
+#define PLATFORM_IDENTIFIER_WINDOWS		1
+#define PLATFORM_IDENTIFIER_MACOSX		2
+#define PLATFORM_IDENTIFIER_LINUX		3
+#define PLATFORM_IDENTIFIER_IOS			4
+#define PLATFORM_IDENTIFIER_ANDROID		5
+
+
+#define PLATFORM_TARGET					PLATFORM_IDENTIFIER_DEFAULT
+
+
+#if		! PLATFORM_TARGET && defined( WIN32 )
+#	undef	PLATFORM_TARGET
+#	define	PLATFORM_TARGET				PLATFORM_IDENTIFIER_WINDOWS
+
+#elif	! PLATFORM_TARGET && defined( TARGET_OS_MAC )
+#	undef	PLATFORM_TARGET
+#	define	PLATFORM_TARGET				PLATFORM_IDENTIFIER_MACOSX
+
+#endif
+
+
+#if		PLATFORM_TARGET == PLATFORM_IDENTIFIER_WINDOWS
+
+#	include	"Win32/Platform.h"
+
+#elif	PLATFORM_TARGET == PLATFORM_IDENTIFIER_MACOSX
+
+#	include "MacOSX/Platform.h"
+
+#endif
+
+
 class PlatformBase
 {
 public:
 	PlatformBase(void);
 	~PlatformBase(void);
 };
-

@@ -11,26 +11,28 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Application.cpp" />
     <ClCompile Include="FrameworkManager.cpp" />
-    <ClCompile Include="Input.cpp" />
     <ClCompile Include="PlatformBase.cpp" />
+    <ClCompile Include="Platform\Win32\Application.cpp" />
+    <ClCompile Include="Platform\Win32\Input.cpp" />
+    <ClCompile Include="Platform\Win32\Platform.cpp" />
+    <ClCompile Include="Platform\Win32\Window.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h" />
     <ClInclude Include="FrameworkManager.h" />
-    <ClInclude Include="Input.h" />
     <ClInclude Include="Macro.h" />
     <ClInclude Include="PlatformBase.h" />
+    <ClInclude Include="Platform\Win32\Application.h" />
+    <ClInclude Include="Platform\Win32\Input.h" />
+    <ClInclude Include="Platform\Win32\Platform.h" />
+    <ClInclude Include="Platform\Win32\Window.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="Window.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9D02BB02-4991-46E8-A4F9-8BFC24E9DDCE}</ProjectGuid>
@@ -59,8 +61,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)Libraries\glew-1.10.0\include\;$(SolutionDir)Framework;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Libraries\glew-1.10.0\lib\Release\x64;$(OutputPath);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Libraries\glm-0.9.5.1\glm;$(SolutionDir)Libraries\glew-1.10.0\include\;$(SolutionDir)Framework;$(SolutionDir)Framework\Platform;$(SolutionDir)Framework\Platform\Win32;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Libraries\glew-1.10.0\lib\Release\Win32\;$(OutputPath);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LibraryPath>$(SolutionDir)Libraries\glew-1.10.0\lib\Release\x64;$(OutputPath);$(LibraryPath)</LibraryPath>
@@ -70,12 +72,15 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
+      <UndefinePreprocessorDefinitions>
+      </UndefinePreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;GLEW_STATIC;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>glew32.lib</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glew32s.lib;</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

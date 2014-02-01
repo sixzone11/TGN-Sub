@@ -1,8 +1,12 @@
 #pragma once
 
+#include <string>
+#include "Macro.h"
+
 #include "Application.h"
 #include "SceneManager.h"
 #include "Renderer.h"
+#include "Shader.h"
 
 class FrameworkManager
 {

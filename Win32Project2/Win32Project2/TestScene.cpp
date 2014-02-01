@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "TestScene.h"
 
+#include "PlatformBase.h"
+
 #include <GL/glew.h>
 
 #define _USE_MATH_DEFINES
@@ -20,7 +22,7 @@ TestScene::~TestScene(void)
 
 void TestScene::Initialize(void* context)
 {
-	GLfloat ambient[] = {0.0f, 0.0f, 0.0f, 1.0f};
+	/*GLfloat ambient[] = {0.0f, 0.0f, 0.0f, 1.0f};
 	GLfloat diffuse[] = {.8f, .8f, .4f, 1.0f};
 	GLfloat specular[] = {.8f, 0.3f, 0.5f, 1.0f};
 	GLfloat position[] = {0.0f, 0.0f, 5.0f, 0.0f};
@@ -39,60 +41,48 @@ void TestScene::Initialize(void* context)
 	glEnable(GL_LIGHT0);
 
 	glEnable(GL_NORMALIZE);
-	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);*/
 
-
-	glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
+	glClearColor( 0.f, .5f, 0.f, 1.f );
 
 	_cameraZ = 0;
 	_cameraAngle = 0;
 
-/*
-	this->_quad[0].x; this->_quad[0].y; this->_quad[0].z;
-	this->_quad[1].x; this->_quad[1].y; this->_quad[1].z;
-	this->_quad[2].x; this->_quad[2].y; this->_quad[2].z;
-	this->_quad[3].x; this->_quad[3].y; this->_quad[3].z;*/
+	// Set values
+	_triangle[0].Set( 0, 1, 0 );//, 0, 1, -1 );
+	_triangle[1].Set( -.5f, 0, 0 );//, -1.f, -1.f, 0 );
+	_triangle[2].Set( .5f, 0, 0 ); //, 1, -1, 0 );
+
+	LOG("triangle size: %d", sizeof(_triangle) );
+	
+	// vertex buffer generate & bind
+	glGenBuffers( 1, &_vertexBufferObject[0] );
+	glBindBuffer( GL_ARRAY_BUFFER, _vertexBufferObject[0] );
+	glBufferData( GL_ARRAY_BUFFER, sizeof( _triangle ), &_triangle, GL_STATIC_DRAW );
 }
 
 void TestScene::Update(void* context, float dt)
 {
+	//_triangle[0].Set( 0, 1, 0, 0, 1, -1 );
+	//_triangle[1].Set( -.5f, 0, 0, -1.f, -1.f, 0 );
+	//_triangle[2].Set( .5f, 0, 0, 1, -1, 0 );
 }
 
 void TestScene::Render(void* context, float dt)
 {
 	static float angle = 1;
 
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject[0]);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, 0);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	
+	glEnableVertexAttribArray( 0 );
+	
+	glBindBuffer( GL_ARRAY_BUFFER, _vertexBufferObject[0] );
+	glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0/*sizeof(float) * 6*/, 0 );
+	
+	// glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, _triangle + sizeof(float) * 3 );
 
-	glMatrixMode( GL_PROJECTION );
+	glDrawArrays( GL_TRIANGLES, 0, 3 );
 
-	glLoadIdentity();
-	gluPerspective(28.0, 800.0/600.0, 5.0, 19.0);
-
-	glMatrixMode(GL_MODELVIEW);
-	//setCamera();
-	glLoadIdentity();
-
-	float radian = (float)(_cameraAngle / (180 * M_PI));
-	gluLookAt(
-		_cameraZ * sin(radian), 0, _cameraZ * cos(radian),
-		0, 0, 0,
-		0, 1, 0);
-
-	//drawAxis();
-
-	glMatrixMode(GL_MODELVIEW);
-	glTranslatef(0.0, 0.0, 0);
-	glRotatef(angle, 0, 0, 1);
-	angle += 1;
-
-	glGenBuffers(2, _vertexBufferObject);
-
-	glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferObject[0]);
-	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), _triangle, GL_STATIC_DRAW);
+	glDisableVertexAttribArray( 0 );
 
 	glFlush();
 }
@@ -122,4 +112,45 @@ void TestScene::HardwereResponse(void* context, const CInput* input)
 	{
 		_cameraAngle += .001f;
 	}
+}
+
+void TestScene::ShaderInitialize()
+{
+	// Compile shader
+	unsigned vertexShader;
+	const GLchar* source = "test.vsh";
+	vertexShader = glCreateShader( GL_VERTEX_SHADER );
+	glShaderSource( vertexShader, 1, &source, 0 );
+	glCompileShader( vertexShader );
+	
+	int compileStatus;
+	glGetShaderiv( vertexShader, GL_COMPILE_STATUS, &compileStatus );
+
+	if( compileStatus == GL_FALSE )
+	{
+		char msg[256];
+		glGetShaderInfoLog( vertexShader, sizeof(msg), 0, msg );
+		return;
+	}
+
+	_programHandle = glCreateProgram();
+
+	glAttachShader( _programHandle, vertexShader );
+	// ps
+
+	glBindAttribLocation( _programHandle, 0, "vpos" );
+	glBindAttribLocation( _programHandle, 1, "vnorm" );
+
+	int linkStatus;
+	glLinkProgram( _programHandle );
+	glGetProgramiv( _programHandle, GL_LINK_STATUS, &linkStatus );
+	if( linkStatus == GL_FALSE )
+	{
+		char msg[256];
+		glGetProgramInfoLog( _programHandle, sizeof(msg), 0, msg );
+		_programHandle = 0;
+		return;
+	}
+
+	glUseProgram( _programHandle );
 }

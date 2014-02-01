@@ -2,6 +2,8 @@
 
 #include "Macro.h"
 
+#include <gl/glew.h>
+
 class Window;
 
 class PlatformBase;
@@ -22,11 +24,16 @@ public:
 	
 
 public:
+	void Initialize();
+
+
+public:
 	void BeginScene();
 	void Present();
 
 
 private:
 	Window*		_window;
+	GLuint		_vertexArrayID;
 };
 
