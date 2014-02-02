@@ -20,6 +20,9 @@
     <Filter Include="Class\Game">
       <UniqueIdentifier>{28aec623-8ccf-40b5-b0fa-9db842516892}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource\ShaderSample">
+      <UniqueIdentifier>{c3356137-c163-4b6f-852a-2e8bebbe07d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -77,6 +80,12 @@
     </None>
     <None Include="test.fsh">
       <Filter>Resource</Filter>
+    </None>
+    <None Include="shader.vsh">
+      <Filter>Resource\ShaderSample</Filter>
+    </None>
+    <None Include="shader.fsh">
+      <Filter>Resource\ShaderSample</Filter>
     </None>
   </ItemGroup>
 </Project>

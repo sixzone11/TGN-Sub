@@ -118,6 +118,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="shader.fsh" />
+    <None Include="shader.vsh" />
     <None Include="test.fsh" />
     <None Include="test.vsh" />
   </ItemGroup>

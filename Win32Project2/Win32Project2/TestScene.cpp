@@ -52,13 +52,39 @@ void TestScene::Initialize(void* context)
 	_triangle[0].Set( 0, 1, 0 );//, 0, 1, -1 );
 	_triangle[1].Set( -.5f, 0, 0 );//, -1.f, -1.f, 0 );
 	_triangle[2].Set( .5f, 0, 0 ); //, 1, -1, 0 );
+	
+	_color[0].Set( 1, 0, 0 );
+	_color[1].Set( 0, 1, 0 );
+	_color[2].Set( 0, 0, 1 );
 
 	LOG("triangle size: %d", sizeof(_triangle) );
 	
-	// vertex buffer generate & bind
-	glGenBuffers( 1, &_vertexBufferObject[0] );
+	//// vertex buffer generate
+	glGenBuffers( 2, _vertexBufferObject );
+
+	//// triangle bind
 	glBindBuffer( GL_ARRAY_BUFFER, _vertexBufferObject[0] );
-	glBufferData( GL_ARRAY_BUFFER, sizeof( _triangle ), &_triangle, GL_STATIC_DRAW );
+	glBufferData( GL_ARRAY_BUFFER, sizeof( _triangle ), _triangle, GL_STATIC_DRAW );
+	
+	// enable attrib index;
+	glEnableVertexAttribArray( 0 );
+	glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, NULL );
+
+	// for color like above
+	glBindBuffer( GL_ARRAY_BUFFER, _vertexBufferObject[1] );
+	glBufferData( GL_ARRAY_BUFFER, sizeof( _color ), _color, GL_STATIC_DRAW );
+	glEnableVertexAttribArray( 1 );
+	glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, 0, NULL );
+
+	vsh.LoadShader( "shader.vsh", GL_VERTEX_SHADER );
+	fsh.LoadShader( "shader.fsh", GL_FRAGMENT_SHADER );
+
+	prog.CreateProgram();
+	prog.AddShaderToProgram( &vsh );
+	prog.AddShaderToProgram( &fsh );
+
+	prog.LinkProgram();
+	prog.UseProgram();
 }
 
 void TestScene::Update(void* context, float dt)
@@ -72,17 +98,7 @@ void TestScene::Render(void* context, float dt)
 {
 	static float angle = 1;
 
-	
-	glEnableVertexAttribArray( 0 );
-	
-	glBindBuffer( GL_ARRAY_BUFFER, _vertexBufferObject[0] );
-	glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0/*sizeof(float) * 6*/, 0 );
-	
-	// glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, _triangle + sizeof(float) * 3 );
-
 	glDrawArrays( GL_TRIANGLES, 0, 3 );
-
-	glDisableVertexAttribArray( 0 );
 
 	glFlush();
 }

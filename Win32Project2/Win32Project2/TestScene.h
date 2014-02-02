@@ -2,6 +2,9 @@
 
 #include "Scene.h"
 
+
+#include "Shader.h"
+
 class TestScene : public CScene
 {
 public:
@@ -37,9 +40,10 @@ private:
 		struct
 		{
 			float _x, _y, _z;
+			//float _r, _g, _b;
 			//float _nx, _ny, _nz;
 		};
-		float _a[3]; //6];
+		float _a[3];
 
 		void Set(float x = 0.f, float y = 0.f, float z = 0.f)//, float nx = 0.f, float ny = 0.f, float nz = 0.f)
 		{
@@ -51,6 +55,14 @@ private:
 			_a[0] = a[0], _a[1] = a[1], _a[2] = a[2];
 			//_a[3] = a[3], _a[4] = a[4], _a[5] = a[5];
 		}
-	}			_triangle[3], _quad[4];
+
+		//void SetColor( float r, float g, float b )
+		//{
+		//	_r = r, _g = g, _b = b;
+		//}
+	}			_triangle[3], _color[3];
 	unsigned	_vertexBufferObject[2];
+
+	CShader vsh, fsh;
+	CShaderProgram prog;
 };

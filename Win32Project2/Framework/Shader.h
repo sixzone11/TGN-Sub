@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include "Macro.h"
+
 class CShader
 {
 public:
@@ -12,13 +15,43 @@ public:
 	void			DeleteShader();
 
 
+public:
+	GET_ACCESSOR(	ShaderID, unsigned, _shaderID );
+	IS_ACCESSOR(	Loaded, bool, _loaded );
+	
 
 private:
 	int				_type;
+	unsigned		_shaderID;
+	bool			_loaded;
+};
+
+
+class CShaderProgram
+{
+public:
+	CShaderProgram();
+	~CShaderProgram();
 
 
 public:
-	DEFINE_GET_SET_ACCESSOR(		ShaderID, unsigned, _shaderID );
-	DEFINE_IS_SET_ACCESSOR(			Loaded, bool, _loaded );
-};
+	void			CreateProgram();
+	void			DeleteProgram();
 
+
+public:
+	bool			AddShaderToProgram( CShader* shader );
+	bool			LinkProgram();
+	
+	void			UseProgram();
+
+
+public:
+	GET_ACCESSOR(	ProgramID, unsigned, _programID );
+	IS_ACCESSOR(	Linked, bool, _linked );
+
+
+private:
+	unsigned		_programID;
+	bool			_linked;
+};

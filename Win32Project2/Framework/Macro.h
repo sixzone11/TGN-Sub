@@ -20,6 +20,6 @@
 #define DEFINE_GET_SET_ACCESSOR(n, t, mv)		private: t mv; public: GET_SET_ACCESSOR(n, t, mv)
 #define DEFINE_IS_SET_ACCESSOR(n, t, mv)		private: t mv; public: IS_SET_ACCESSOR(n, t, mv)
 #define DEFINE_P_GET_SET_ACCESSOR(n, pt, mv)	private: pt* mv; public: GETP_SETP_ACCESSOR(n, pt, mv)
-#define DEFINE_P_GET_SET_ACCESSOR(n, pt, mv)   private: pt* mv; public: ISP_SETP_ACCESSOR(n, pt, mv)
+#define DEFINE_P_IS_SET_ACCESSOR(n, pt, mv)		private: pt* mv; public: ISP_SETP_ACCESSOR(n, pt, mv)
 
 #define SET_INTERFACE		= 0
