@@ -5,6 +5,8 @@
 
 #include "Shader.h"
 
+#include <glm/glm.hpp>
+
 class TestScene : public CScene
 {
 public:
@@ -62,6 +64,8 @@ private:
 		//}
 	}			_triangle[3], _color[3];
 	unsigned	_vertexBufferObject[2];
+
+	glm::mat4 projectionMatrix;
 
 	CShader vsh, fsh;
 	CShaderProgram prog;

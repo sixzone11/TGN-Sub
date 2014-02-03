@@ -81,10 +81,10 @@
     <None Include="test.fsh">
       <Filter>Resource</Filter>
     </None>
-    <None Include="shader.vsh">
+    <None Include="shader.frag">
       <Filter>Resource\ShaderSample</Filter>
     </None>
-    <None Include="shader.fsh">
+    <None Include="shader.vert">
       <Filter>Resource\ShaderSample</Filter>
     </None>
   </ItemGroup>

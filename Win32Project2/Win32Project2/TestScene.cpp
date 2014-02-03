@@ -4,6 +4,9 @@
 #include "PlatformBase.h"
 
 #include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -76,8 +79,8 @@ void TestScene::Initialize(void* context)
 	glEnableVertexAttribArray( 1 );
 	glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, 0, NULL );
 
-	vsh.LoadShader( "shader.vsh", GL_VERTEX_SHADER );
-	fsh.LoadShader( "shader.fsh", GL_FRAGMENT_SHADER );
+	vsh.LoadShader( "shader.vert", GL_VERTEX_SHADER );
+	fsh.LoadShader( "shader.frag", GL_FRAGMENT_SHADER );
 
 	prog.CreateProgram();
 	prog.AddShaderToProgram( &vsh );
@@ -85,6 +88,8 @@ void TestScene::Initialize(void* context)
 
 	prog.LinkProgram();
 	prog.UseProgram();
+
+	projectionMatrix = glm::perspective( float(45), float(800/600), float(.001f), float(1000.f) );
 }
 
 void TestScene::Update(void* context, float dt)
@@ -92,6 +97,17 @@ void TestScene::Update(void* context, float dt)
 	//_triangle[0].Set( 0, 1, 0, 0, 1, -1 );
 	//_triangle[1].Set( -.5f, 0, 0, -1.f, -1.f, 0 );
 	//_triangle[2].Set( .5f, 0, 0, 1, -1, 0 );
+
+	int modelViewLoc = glGetUniformLocation( prog.GetProgramID(), "modelViewMatrix" );
+	int projectionLoc = glGetUniformLocation( prog.GetProgramID(), "projectionMatrix" );
+
+	glUniformMatrix4fv( projectionLoc, 1, GL_FALSE, glm::value_ptr( projectionMatrix ) );
+
+
+	glm::mat4 modelView = glm::lookAt( glm::vec3(0, 15, 40 + _cameraZ), glm::vec3(), glm::vec3(0, 1, 0) );
+
+	glm::mat4 current = glm::rotate( modelView, _cameraAngle, glm::vec3(0.0f, 1.0f, 0.0f) );
+	glUniformMatrix4fv( modelViewLoc, 1, GL_FALSE, glm::value_ptr( current ) );
 }
 
 void TestScene::Render(void* context, float dt)

@@ -41,7 +41,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Libraries\glew-1.10.0\include\;$(SolutionDir)Framework;$(SolutionDir)Framework\Platform;$(SolutionDir)Framework\Platform\Win32;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Libraries\glm-0.9.5.1;$(SolutionDir)Libraries\glew-1.10.0\include\;$(SolutionDir)Framework;$(SolutionDir)Framework\Platform;$(SolutionDir)Framework\Platform\Win32;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Libraries\glew-1.10.0\lib\Release\Win32\;$(OutputPath);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -118,8 +118,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.fsh" />
-    <None Include="shader.vsh" />
+    <None Include="shader.frag" />
+    <None Include="shader.vert" />
     <None Include="test.fsh" />
     <None Include="test.vsh" />
   </ItemGroup>
