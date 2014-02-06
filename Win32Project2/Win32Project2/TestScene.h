@@ -63,10 +63,12 @@ private:
 		//	_r = r, _g = g, _b = b;
 		//}
 	}			_triangle[3], _color[3];
-	unsigned	_vertexBufferObject[2];
+	unsigned	_vertexBufferObject[3];
 
 	glm::mat4 projectionMatrix;
 
 	CShader vsh, fsh;
 	CShaderProgram prog;
+
+	glm::vec3 heightMap[16];
 };

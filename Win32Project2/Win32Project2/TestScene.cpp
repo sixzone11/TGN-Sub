@@ -11,6 +11,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+
 TestScene::TestScene(void)
 {
 	Initialize(NULL);
@@ -61,9 +62,10 @@ void TestScene::Initialize(void* context)
 	_color[2].Set( 0, 0, 1 );
 
 	LOG("triangle size: %d", sizeof(_triangle) );
+
 	
 	//// vertex buffer generate
-	glGenBuffers( 2, _vertexBufferObject );
+	glGenBuffers( 3, _vertexBufferObject );
 
 	//// triangle bind
 	glBindBuffer( GL_ARRAY_BUFFER, _vertexBufferObject[0] );
@@ -79,6 +81,31 @@ void TestScene::Initialize(void* context)
 	glEnableVertexAttribArray( 1 );
 	glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, 0, NULL );
 
+	// third buffer object is for indexed
+	float fHeights[16] = 
+	{ 
+		4.0f, 2.0f, 3.0f, 1.0f, 
+		3.0f, 5.0f, 8.0f, 2.0f, 
+		7.0f, 10.0f, 12.0f, 6.0f, 
+		4.0f, 6.0f, 8.0f, 3.0f 
+	};
+
+	float fSizeX = 40.0f, fSizeZ = 40.0f;
+
+	glBindBuffer( GL_ARRAY_BUFFER, _vertexBufferObject[2] );
+	glBufferData( GL_ARRAY_BUFFER, sizeof( _heightMap ), _heightMap, GL_STATIC_DRAW );
+
+	for( int i = 0; i < 16; ++i )
+	{
+		float x = float(i%4);
+		float z = float(i/4);
+
+		_heightMap[i] = glm::vec3(
+			);
+	}
+
+
+	// Shader setting
 	vsh.LoadShader( "shader.vert", GL_VERTEX_SHADER );
 	fsh.LoadShader( "shader.frag", GL_FRAGMENT_SHADER );
 
