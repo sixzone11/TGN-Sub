@@ -11,6 +11,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+// Ref link: http://www.mbsoftworks.sk/index.php?page=tutorials&series=1&tutorial=6
 
 TestScene::TestScene(void)
 {
@@ -47,7 +48,7 @@ void TestScene::Initialize(void* context)
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_DEPTH_TEST);*/
 
-	glClearColor( 0.f, .5f, 0.f, 1.f );
+	glClearColor( 0.f, 0.f, 0.f, 1.f );
 
 	_cameraZ = 0;
 	_cameraAngle = 0;
@@ -64,8 +65,11 @@ void TestScene::Initialize(void* context)
 	LOG("triangle size: %d", sizeof(_triangle) );
 
 	
+	glGenVertexArrays( 2, _vertexArrayID );
+	glBindVertexArray( _vertexArrayID[0] );
+
 	//// vertex buffer generate
-	glGenBuffers( 3, _vertexBufferObject );
+	glGenBuffers( 2, _vertexBufferObject );
 
 	//// triangle bind
 	glBindBuffer( GL_ARRAY_BUFFER, _vertexBufferObject[0] );
@@ -80,7 +84,11 @@ void TestScene::Initialize(void* context)
 	glBufferData( GL_ARRAY_BUFFER, sizeof( _color ), _color, GL_STATIC_DRAW );
 	glEnableVertexAttribArray( 1 );
 	glVertexAttribPointer( 1, 3, GL_FLOAT, GL_FALSE, 0, NULL );
+	
 
+	glBindVertexArray( _vertexArrayID[1] );
+
+	glGenBuffers( 1, &_vertexBufferObject2 );
 	// third buffer object is for indexed
 	float fHeights[16] = 
 	{ 
@@ -92,8 +100,7 @@ void TestScene::Initialize(void* context)
 
 	float fSizeX = 40.0f, fSizeZ = 40.0f;
 
-	glBindBuffer( GL_ARRAY_BUFFER, _vertexBufferObject[2] );
-	glBufferData( GL_ARRAY_BUFFER, sizeof( _heightMap ), _heightMap, GL_STATIC_DRAW );
+	glBindBuffer( GL_ARRAY_BUFFER, _vertexBufferObject2 );
 
 	for( int i = 0; i < 16; ++i )
 	{
@@ -101,8 +108,29 @@ void TestScene::Initialize(void* context)
 		float z = float(i/4);
 
 		_heightMap[i] = glm::vec3(
+			-fSizeX/2+fSizeX*x/float(4-1),	// X Coordinate
+			fHeights[i],					// Y Coordinate (it's height)
+			-fSizeZ/2+fSizeZ*z/float(4-1)	// Z Coordinate
 			);
 	}
+	glBufferData( GL_ARRAY_BUFFER, sizeof( _heightMap ), _heightMap, GL_STATIC_DRAW );
+	
+	glEnableVertexAttribArray( 0 );
+	glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, 0 );
+
+	// index buffer
+	glGenBuffers( 1, &_indexBufferObject );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, _indexBufferObject );
+	int iIndices[] = 
+	{ 
+		0, 4, 1, 5, 2, 6, 3, 7, 16,		// First row, then restart
+		4, 8, 5, 9, 6, 10, 7, 11, 16,	// Second row, then restart
+		8, 12, 9, 13, 10, 14, 11, 15	// Third row, no restart
+	};
+
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( iIndices ), iIndices, GL_STATIC_DRAW );
+	glEnable( GL_PRIMITIVE_RESTART );
+	glPrimitiveRestartIndex( 16 );
 
 
 	// Shader setting
@@ -116,6 +144,8 @@ void TestScene::Initialize(void* context)
 	prog.LinkProgram();
 	prog.UseProgram();
 
+
+
 	projectionMatrix = glm::perspective( float(45), float(800/600), float(.001f), float(1000.f) );
 }
 
@@ -125,13 +155,14 @@ void TestScene::Update(void* context, float dt)
 	//_triangle[1].Set( -.5f, 0, 0, -1.f, -1.f, 0 );
 	//_triangle[2].Set( .5f, 0, 0, 1, -1, 0 );
 
+	glBindVertexArray( _vertexArrayID[0] );
 	int modelViewLoc = glGetUniformLocation( prog.GetProgramID(), "modelViewMatrix" );
 	int projectionLoc = glGetUniformLocation( prog.GetProgramID(), "projectionMatrix" );
 
 	glUniformMatrix4fv( projectionLoc, 1, GL_FALSE, glm::value_ptr( projectionMatrix ) );
 
 
-	glm::mat4 modelView = glm::lookAt( glm::vec3(0, 15, 40 + _cameraZ), glm::vec3(), glm::vec3(0, 1, 0) );
+	glm::mat4 modelView = glm::lookAt( glm::vec3(0, 60, 30 + _cameraZ), glm::vec3(), glm::vec3(0, 1, 0) );
 
 	glm::mat4 current = glm::rotate( modelView, _cameraAngle, glm::vec3(0.0f, 1.0f, 0.0f) );
 	glUniformMatrix4fv( modelViewLoc, 1, GL_FALSE, glm::value_ptr( current ) );
@@ -141,7 +172,11 @@ void TestScene::Render(void* context, float dt)
 {
 	static float angle = 1;
 
+	glBindVertexArray( _vertexArrayID[0] );
 	glDrawArrays( GL_TRIANGLES, 0, 3 );
+
+	glBindVertexArray( _vertexArrayID[1] );
+	glDrawElements(GL_TRIANGLE_STRIP, 4*(4-1)*2+4-2, GL_UNSIGNED_INT, 0);
 
 	glFlush();
 }

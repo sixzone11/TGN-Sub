@@ -12,10 +12,6 @@ Renderer::~Renderer(void)
 
 void Renderer::Initialize()
 {
-	// vertex array generate & bind
-	GLuint _vertexArrayID;
-	glGenVertexArrays( 1, &_vertexArrayID );
-	glBindVertexArray( _vertexArrayID );
 }
 
 void Renderer::BeginScene()
